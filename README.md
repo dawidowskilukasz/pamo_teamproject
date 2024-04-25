@@ -7,7 +7,7 @@ s21487 - Anna Rogala\
 s22020 - Zuzanna Bernacka\
 s22621 - Łukasz Dawidowski
 
-## Functionality
+## Functionality:
 
 - Setting start work time (M)\
 - Play default sound when 8h pass (M)\
