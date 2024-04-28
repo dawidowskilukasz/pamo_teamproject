@@ -1,5 +1,9 @@
 # Team Project for PAMO - WorkGood
 
+## App overview:
+
+Application going to enchance you work-life balance by reminding you when you should end work and force you to take photo outside of your workplace. 
+
 ## Team:
 
 - s22994 - Adam Łuszcz
