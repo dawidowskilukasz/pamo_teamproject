@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Work Good</string>
+    <string name="home_header_welcome">Welcome to Work Good</string>
+    <string name="home_logo_description">Logo of the Work Good</string>
     <string name="title_home">Home</string>
     <string name="title_work_good">Work Good</string>
     <string name="title_settings">Settings</string>
