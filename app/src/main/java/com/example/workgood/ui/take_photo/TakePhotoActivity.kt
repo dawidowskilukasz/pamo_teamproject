@@ -67,6 +67,12 @@ class TakePhotoActivity : AppCompatActivity() {
 
         viewBinding.imageCaptureButton.setOnClickListener { takePhoto() }
 
+        viewBinding.backToMainActivityButton.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
