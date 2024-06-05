@@ -2,7 +2,9 @@ package com.example.workgood.ui.take_photo
 
 import android.Manifest
 import android.content.ContentValues
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,6 +18,7 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import com.example.workgood.MainActivity
 import com.example.workgood.databinding.ActivityTakePhotoBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -52,6 +55,8 @@ class TakePhotoActivity : AppCompatActivity() {
             }
         }
 
+
+    private var savedImageUri: Uri? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
@@ -106,11 +111,26 @@ class TakePhotoActivity : AppCompatActivity() {
                 override fun
                         onImageSaved(output: ImageCapture.OutputFileResults){
                     val msg = "Photo capture succeeded: ${output.savedUri}"
-                    Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+                    savedImageUri = output.savedUri
                     Log.d(TAG, msg)
+                    showImagePreview(output.savedUri)
                 }
             }
         )
+    }
+
+    private fun showImagePreview(uri: Uri?) {
+        if (uri == null) return
+
+        val dialog = FullScreenImageDialog(uri,
+            onSave = { Toast.makeText(this, "Photo saved at: $uri", Toast.LENGTH_SHORT).show() },
+            onDiscard = {
+                contentResolver.delete(uri, null, null)
+                savedImageUri = null
+                Toast.makeText(this, "Photo discarded", Toast.LENGTH_SHORT).show()
+            })
+
+        dialog.show(supportFragmentManager, "FullScreenImageDialog")
     }
 
 
