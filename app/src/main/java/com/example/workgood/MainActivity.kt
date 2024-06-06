@@ -1,4 +1,4 @@
-package com.example.workgood.activity
+package com.example.workgood
 
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -7,7 +7,6 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.example.workgood.R
 import com.example.workgood.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
