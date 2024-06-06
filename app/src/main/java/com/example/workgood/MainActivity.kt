@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_home, R.id.navigation_settings, R.id.navigation_take_photo
             )
         )
-        
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -45,7 +45,10 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
-                else -> false
+                else -> {
+                    navController.navigate(item.itemId)
+                    true
+                }
             }
         }
     }

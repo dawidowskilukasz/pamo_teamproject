@@ -46,8 +46,8 @@ class SetAlarmActivity : AppCompatActivity() {
             getSharedPreferences(ALARM_PREFS_KEY, Context.MODE_PRIVATE)
         val startHour = sharedPreferences.getInt(START_HOUR_KEY, 0)
         val startMinute = sharedPreferences.getInt(START_MINUTE_KEY, 0)
-        val endHour = sharedPreferences.getInt(START_HOUR_KEY, 0)
-        val endMinute = sharedPreferences.getInt(START_MINUTE_KEY, 0)
+        val endHour = sharedPreferences.getInt(END_HOUR_KEY, 0)
+        val endMinute = sharedPreferences.getInt(END_MINUTE_KEY, 0)
 
 
         startTimePicker.hour = startHour
