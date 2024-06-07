@@ -54,7 +54,7 @@ class SettingsFragment : Fragment() {
         // Placeholder stop button logic
         //TODO: Workout how to implement compare logic
         binding.stopAlarmButton.setOnClickListener {
-            val stopIntent = Intent(context, SoundPlaybackService::class.java).apply {
+            val stopIntent = Intent(context, StartAlarmService::class.java).apply {
                 action = STOP_ALARM_ACTION
             }
             requireContext().stopService(stopIntent)

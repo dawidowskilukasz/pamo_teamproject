@@ -17,7 +17,7 @@ class AlarmReceiver : BroadcastReceiver() {
                 val message = context.getString(R.string.end_time_reached_message)
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 
-                val serviceIntent = Intent(context, SoundPlaybackService::class.java)
+                val serviceIntent = Intent(context, StartAlarmService::class.java)
                 context.startService(serviceIntent)
             }
         }
