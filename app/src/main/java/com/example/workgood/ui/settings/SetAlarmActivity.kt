@@ -19,7 +19,6 @@ import java.util.*
 class SetAlarmActivity : AppCompatActivity() {
     companion object {
         const val END_ALARM = "com.example.workgood.END_ALARM"
-        const val START_ALARM = "com.example.workgood.START_ALARM"
         const val ALARM_PREFS_KEY = "alarm_prefs"
         const val START_HOUR_KEY = "start_hour"
         const val START_MINUTE_KEY = "start_minute"
@@ -99,7 +98,6 @@ class SetAlarmActivity : AppCompatActivity() {
         editor.putInt(END_MINUTE_KEY, endMinute)
         editor.apply()
 
-        setAlarm(startHour, startMinute, START_ALARM)
         setAlarm(endHour, endMinute, END_ALARM)
 
         finish() // Close the activity after setting the alarms
@@ -118,7 +116,7 @@ class SetAlarmActivity : AppCompatActivity() {
                 this,
                 0,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+                PendingIntent.FLAG_CANCEL_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         }
 

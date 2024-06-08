@@ -19,6 +19,7 @@ class SettingsFragment : Fragment() {
         const val START_MINUTE_KEY = "start_minute"
         const val END_HOUR_KEY = "end_hour"
         const val END_MINUTE_KEY = "end_minute"
+        const val STOP_ALARM_ACTION = "STOP_ALARM_ACTION"
     }
 
     private var _binding: FragmentSettingsBinding? = null
@@ -49,6 +50,17 @@ class SettingsFragment : Fragment() {
             startActivity(intent)
         }
         loadSavedTimes()
+
+        // Placeholder stop button logic
+        //TODO: Workout how to implement compare logic
+        binding.stopAlarmButton.setOnClickListener {
+            val stopIntent = Intent(context, StartAlarmService::class.java).apply {
+                action = STOP_ALARM_ACTION
+            }
+            requireContext().stopService(stopIntent)
+        }
+
+
 
         return root
     }
