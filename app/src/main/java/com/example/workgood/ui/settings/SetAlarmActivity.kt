@@ -19,7 +19,6 @@ import java.util.*
 class SetAlarmActivity : AppCompatActivity() {
     companion object {
         const val END_ALARM = "com.example.workgood.END_ALARM"
-        const val START_ALARM = "com.example.workgood.START_ALARM"
         const val ALARM_PREFS_KEY = "alarm_prefs"
         const val START_HOUR_KEY = "start_hour"
         const val START_MINUTE_KEY = "start_minute"
