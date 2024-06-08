@@ -13,10 +13,23 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.opencv.android.OpenCVLoader
 import android.util.Log
 
+/**
+ * MainActivity acts as the entry point for the application and the host for its primary navigation components.
+ * It initializes and sets up the bottom navigation and the app bar configuration.
+ * It also handles the initialization of OpenCV library.
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
+    /**
+     * Called when the activity is starting.
+     * This method performs basic application startup logic that should happen only once for the entire life of the activity.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     * then this Bundle contains the data most recently supplied in onSaveInstanceState(Bundle).
+     * The onSaveInstanceState(Bundle) is null if the activity has never existed before.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
