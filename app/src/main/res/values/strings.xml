@@ -19,6 +19,7 @@
     <string name="empty_start_time">Start Time: Not Set</string>
     <string name="empty_end_time">End Time: Not Set</string>
     <string name="set_work_time">Set work time</string>
+    <string name="set_photo">Set photo</string>
     <string name="provide_working_shift_time">Provide the start and end time of your working shift</string>
     <string name="timer_prefix">Time to leave work in:</string>
     <string name="take_photo">Take Photo</string>
