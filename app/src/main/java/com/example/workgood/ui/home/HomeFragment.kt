@@ -16,6 +16,10 @@ import com.example.workgood.databinding.FragmentHomeBinding
 import java.util.Calendar
 import java.util.Locale
 
+/**
+ * A Fragment subclass representing the home screen of the application.
+ * It manages the display of the countdown timer.
+ */
 class HomeFragment : Fragment() {
     companion object {
         const val ALARM_PREFS_KEY = "alarm_prefs"
@@ -29,6 +33,15 @@ class HomeFragment : Fragment() {
     private lateinit var handler: Handler
     private lateinit var runnable: Runnable
 
+    /**
+    * Called to have the fragment instantiate.
+    * Initializes the home ViewModel, timer text and updating timer handler.
+    *
+    * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+    * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+    * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+    * @return Return the View for the fragment's UI, or null.
+    */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -60,12 +73,19 @@ class HomeFragment : Fragment() {
         return root
     }
 
+    /**
+     * Clean up any resources that will not be needed after the view is destroyed.
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
         handler.removeCallbacks(runnable)
     }
 
+    /**
+     * Updates the timer display with the time remaining until the alarm is set.
+     * If the alarm time is past the current time, a message indicating the end of the time is displayed.
+     */
     private fun updateTimer() {
         val sharedPreferences: SharedPreferences =
             requireActivity().getSharedPreferences(ALARM_PREFS_KEY, Context.MODE_PRIVATE)
