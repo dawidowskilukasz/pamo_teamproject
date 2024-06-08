@@ -100,6 +100,12 @@ class SetAlarmActivity : AppCompatActivity() {
 
         setAlarm(endHour, endMinute, END_ALARM)
 
+        Toast.makeText(
+            this,
+            getString(R.string.alarm_set_success),
+            Toast.LENGTH_SHORT
+        ).show()
+
         finish() // Close the activity after setting the alarms
     }
 
