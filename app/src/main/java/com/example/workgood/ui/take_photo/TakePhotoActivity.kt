@@ -42,11 +42,21 @@ import java.io.File
 
 typealias LumaListener = (luma: Double) -> Unit
 
+/**
+ * An activity that controls the camera for photo capturing and image comparison.
+ * It manages the camera's lifecycle, permissions, photo taking, and image comparison operations.
+ * The activity also provides UI to control the camera and display the taken photo.
+ */
 class TakePhotoActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityTakePhotoBinding
 
     private var imageCapture: ImageCapture? = null
 
+    /**
+     * Used to handle the logic once the photo has been taken and saved.
+     * It handles the comparison of the newly taken photo with existing photos and navigates to the
+     * home fragment if a similar photo is detected or displays a message if the photos are not similar.
+     */
     private lateinit var cameraExecutor: ExecutorService
 
     private val activityResultLauncher =
@@ -96,6 +106,10 @@ class TakePhotoActivity : AppCompatActivity() {
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
+    /**
+     * Captures a photo and saves it to the specified location.
+     * Once the photo is taken, it is displayed in a preview.
+     */
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
 
@@ -135,6 +149,10 @@ class TakePhotoActivity : AppCompatActivity() {
         )
     }
 
+    /**
+     * Compares the recently captured image against all images within the specific directory
+     * and handles logic based on whether a similar image is found.
+     */
     private fun compareImagesInDirectory() {
         val dir = File(Environment.getExternalStorageDirectory(), "/Pictures/WorkGoodApp")
         if (dir.exists() && dir.isDirectory) {
@@ -170,6 +188,12 @@ class TakePhotoActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Converts the provided URI to its real file system path.
+     *
+     * @param uri The URI to convert.
+     * @return The real path as a String, or null if the conversion is not possible.
+     */
     private fun getRealPathFromURI(uri: Uri?): String? {
         var cursor: Cursor? = null
         return try {
@@ -183,6 +207,13 @@ class TakePhotoActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Compares two images using OpenCV to calculate the histogram similarity.
+     *
+     * @param imagePath1 The file path of the first image.
+     * @param imagePath2 The file path of the second image.
+     * @return True if the images are considered similar based on the similarity threshold, false otherwise.
+     */
     fun compareImages(imagePath1: String, imagePath2: String): Boolean {
         // Load the images
         val img1 = Imgcodecs.imread(imagePath1, Imgcodecs.IMREAD_GRAYSCALE)
@@ -215,6 +246,12 @@ class TakePhotoActivity : AppCompatActivity() {
         return result >= similarityThreshold
     }
 
+    /**
+     * Displays a full-screen dialog with the image preview, providing the user with options
+     * to save or discard the photo.
+     *
+     * @param uri The URI of the image to display.
+     */
     private fun showImagePreview(uri: Uri?) {
         if (uri == null) return
 
@@ -229,7 +266,9 @@ class TakePhotoActivity : AppCompatActivity() {
         dialog.show(supportFragmentManager, "FullScreenImageDialog")
     }
 
-
+    /**
+     * Initializes and starts the camera with the required use cases.
+     */
     private fun startCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
 
@@ -259,16 +298,29 @@ class TakePhotoActivity : AppCompatActivity() {
         imageCapture = ImageCapture.Builder().build()
     }
 
-
+    /**
+     * Launches an ActivityResultLauncher to request all necessary permissions.
+     * Permissions include camera access and (for SDK <= P) writing to and reading from external storage.
+     */
     private fun requestPermissions() {
         activityResultLauncher.launch(REQUIRED_PERMISSIONS)
     }
 
+    /**
+     * Checks if all required permissions are granted.
+     *
+     * @return Returns true if all required permissions are granted, false otherwise.
+     */
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
             baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
+    /**
+     * Called by the system when the activity is destroyed. This is the final call that the activity receives.
+     * It is used to release resources and clean up any remaining tasks to avoid memory leaks.
+     * In this case, it shuts down the ExecutorService used for camera operations.
+     */
     override fun onDestroy() {
         super.onDestroy()
         cameraExecutor.shutdown()
