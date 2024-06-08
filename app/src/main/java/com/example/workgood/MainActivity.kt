@@ -10,6 +10,8 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.workgood.databinding.ActivityMainBinding
 import com.example.workgood.ui.take_photo.TakePhotoActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import org.opencv.android.OpenCVLoader
+import android.util.Log
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +20,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        if (OpenCVLoader.initDebug()) {
+            Log.d("OpenCV", "OpenCV initialized successfully")
+        } else {
+            Log.d("OpenCV", "OpenCV initialization failed")
+        }
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 

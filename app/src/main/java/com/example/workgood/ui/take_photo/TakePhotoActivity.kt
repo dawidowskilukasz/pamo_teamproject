@@ -4,9 +4,12 @@ import android.Manifest
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.Context
+import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
@@ -18,12 +21,24 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import com.example.workgood.MainActivity
 import com.example.workgood.databinding.ActivityTakePhotoBinding
+import com.example.workgood.ui.home.HomeFragment
+import com.example.workgood.ui.settings.SettingsFragment
+import com.example.workgood.ui.settings.StartAlarmService
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+
+import org.opencv.core.Core
+import org.opencv.core.Mat
+import org.opencv.core.MatOfFloat
+import org.opencv.core.MatOfInt
+import org.opencv.imgcodecs.Imgcodecs
+import org.opencv.imgproc.Imgproc
+import java.io.File
 
 typealias LumaListener = (luma: Double) -> Unit
 
@@ -113,10 +128,91 @@ class TakePhotoActivity : AppCompatActivity() {
                     val msg = "Photo capture succeeded: ${output.savedUri}"
                     savedImageUri = output.savedUri
                     Log.d(TAG, msg)
+                    compareImagesInDirectory()
                     showImagePreview(output.savedUri)
                 }
             }
         )
+    }
+
+    private fun compareImagesInDirectory() {
+        val dir = File(Environment.getExternalStorageDirectory(), "/Pictures/WorkGoodApp")
+        if (dir.exists() && dir.isDirectory) {
+            val imageFiles = dir.listFiles { file -> file.extension == "jpg" || file.extension == "png" }
+
+            if (imageFiles != null && imageFiles.size >= 2) {
+                for (i in imageFiles.indices) {
+                    for (j in i + 1 until imageFiles.size) {
+                        val imagePath1 = imageFiles[i].absolutePath
+                        val imagePath2 = imageFiles[j].absolutePath
+                        val areImagesSimilar = compareImages(imagePath1, imagePath2)
+                        imageFiles[j].delete()
+                        Log.d("Image Comparison", "Images ${imageFiles[i].name} and ${imageFiles[j].name} are similar: $areImagesSimilar")
+                        if (areImagesSimilar) {
+                            val stopIntent = Intent(this, StartAlarmService::class.java).apply {
+                                action = SettingsFragment.STOP_ALARM_ACTION
+                            }
+                            this.stopService(stopIntent)
+                            val intent = Intent(this, HomeFragment::class.java)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(baseContext,
+                                "Photo not similar!",
+                                Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            } else {
+                Log.d("Image Comparison", "Not enough images in the directory")
+            }
+        } else {
+            Log.d("Image Comparison", "Directory does not exist")
+        }
+    }
+
+    private fun getRealPathFromURI(uri: Uri?): String? {
+        var cursor: Cursor? = null
+        return try {
+            val proj = arrayOf(MediaStore.Images.Media.DATA)
+            cursor = contentResolver.query(uri!!, proj, null, null, null)
+            val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            cursor.moveToFirst()
+            cursor.getString(column_index)
+        } finally {
+            cursor?.close()
+        }
+    }
+
+    fun compareImages(imagePath1: String, imagePath2: String): Boolean {
+        // Load the images
+        val img1 = Imgcodecs.imread(imagePath1, Imgcodecs.IMREAD_GRAYSCALE)
+        val img2 = Imgcodecs.imread(imagePath2, Imgcodecs.IMREAD_GRAYSCALE)
+
+        if (img1.empty() || img2.empty()) {
+            Log.d("OpenCV", "Failed to load images")
+            return false
+        }
+
+        // Compute histograms
+        val histSize = MatOfInt(256)
+        val histRange = MatOfFloat(0f, 256f)
+        val hist1 = Mat()
+        val hist2 = Mat()
+
+        Imgproc.calcHist(listOf(img1), MatOfInt(0), Mat(), hist1, histSize, histRange)
+        Imgproc.calcHist(listOf(img2), MatOfInt(0), Mat(), hist2, histSize, histRange)
+
+        // Normalize the histograms
+        Core.normalize(hist1, hist1, 0.0, 1.0, Core.NORM_MINMAX)
+        Core.normalize(hist2, hist2, 0.0, 1.0, Core.NORM_MINMAX)
+
+        // Compare histograms
+        val result = Imgproc.compareHist(hist1, hist2, Imgproc.CV_COMP_CORREL)
+
+        // Define a threshold for similarity (1.0 means identical)
+        val similarityThreshold = 0.5
+
+        return result >= similarityThreshold
     }
 
     private fun showImagePreview(uri: Uri?) {
@@ -188,6 +284,7 @@ class TakePhotoActivity : AppCompatActivity() {
             ).apply {
                 if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) {
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    add(Manifest.permission.READ_EXTERNAL_STORAGE)
                 }
             }.toTypedArray()
     }

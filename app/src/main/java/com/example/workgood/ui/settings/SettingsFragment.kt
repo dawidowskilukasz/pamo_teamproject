@@ -52,20 +52,10 @@ class SettingsFragment : Fragment() {
         }
         loadSavedTimes()
 
-        // Placeholder stop button logic
-        //TODO: Workout how to implement compare logic
-        binding.stopAlarmButton.setOnClickListener {
-            val stopIntent = Intent(context, StartAlarmService::class.java).apply {
-                action = STOP_ALARM_ACTION
-            }
-            requireContext().stopService(stopIntent)
-        }
-
         binding.setMainPhoto.setOnClickListener{
             val intent = Intent(requireContext(), TakePhotoActivity::class.java)
             startActivity(intent)
         }
-
 
         return root
     }
