@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.Context
 import android.database.Cursor
 import android.net.Uri
 import android.os.Build
@@ -23,6 +24,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.example.workgood.MainActivity
 import com.example.workgood.databinding.ActivityTakePhotoBinding
+import com.example.workgood.ui.home.HomeFragment
+import com.example.workgood.ui.settings.SettingsFragment
+import com.example.workgood.ui.settings.StartAlarmService
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.concurrent.ExecutorService
@@ -144,6 +148,18 @@ class TakePhotoActivity : AppCompatActivity() {
                         val areImagesSimilar = compareImages(imagePath1, imagePath2)
                         imageFiles[j].delete()
                         Log.d("Image Comparison", "Images ${imageFiles[i].name} and ${imageFiles[j].name} are similar: $areImagesSimilar")
+                        if (areImagesSimilar) {
+                            val stopIntent = Intent(this, StartAlarmService::class.java).apply {
+                                action = SettingsFragment.STOP_ALARM_ACTION
+                            }
+                            this.stopService(stopIntent)
+                            val intent = Intent(this, HomeFragment::class.java)
+                            startActivity(intent)
+                        } else {
+                            Toast.makeText(baseContext,
+                                "Photo not similar!",
+                                Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             } else {
@@ -194,7 +210,7 @@ class TakePhotoActivity : AppCompatActivity() {
         val result = Imgproc.compareHist(hist1, hist2, Imgproc.CV_COMP_CORREL)
 
         // Define a threshold for similarity (1.0 means identical)
-        val similarityThreshold = 0.9
+        val similarityThreshold = 0.5
 
         return result >= similarityThreshold
     }
