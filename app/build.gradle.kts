@@ -53,6 +53,7 @@ dependencies {
 
     implementation("androidx.camera:camera-view:${camerax_version}")
     implementation("androidx.camera:camera-extensions:${camerax_version}")
+    implementation(project(":opencv"))
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

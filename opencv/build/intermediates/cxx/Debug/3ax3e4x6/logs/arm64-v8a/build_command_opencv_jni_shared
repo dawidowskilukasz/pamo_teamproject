@@ -1,0 +1,4 @@
+/Users/adam/Library/Android/sdk/cmake/3.22.1/bin/ninja \
+  -C \
+  /Users/adam/studia/PAMO/pamo_teamproject/opencv/.cxx/Debug/3ax3e4x6/arm64-v8a \
+  opencv_jni_shared

@@ -1,0 +1,2 @@
+ninja: Entering directory `/Users/adam/studia/PAMO/pamo_teamproject/opencv/.cxx/Debug/3ax3e4x6/arm64-v8a'
+ninja: no work to do.
