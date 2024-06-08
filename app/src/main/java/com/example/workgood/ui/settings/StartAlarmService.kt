@@ -22,7 +22,6 @@ import com.example.workgood.R
  * The service creates an ongoing notification which keeps the service in the foreground,
  * reducing its chances of being killed by the system.
  */
-//TODO: Fix hardcoded text etc
 class StartAlarmService : Service() {
     private var mediaPlayer: MediaPlayer? = null
     private val NOTIFICATION_ID = 1
