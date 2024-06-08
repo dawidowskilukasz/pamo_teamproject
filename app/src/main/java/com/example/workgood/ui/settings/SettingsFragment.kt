@@ -3,6 +3,7 @@ package com.example.workgood.ui.settings
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.workgood.R
 import com.example.workgood.databinding.FragmentSettingsBinding
 import com.example.workgood.ui.take_photo.TakePhotoActivity
+import java.io.File
 import java.util.Locale
 
 class SettingsFragment : Fragment() {
@@ -52,7 +54,15 @@ class SettingsFragment : Fragment() {
         }
         loadSavedTimes()
 
-        binding.setMainPhoto.setOnClickListener{
+        binding.setMainPhoto.setOnClickListener {
+            val dir = File(Environment.getExternalStorageDirectory(), "/Pictures/WorkGoodApp")
+            if (dir.exists() && dir.isDirectory) {
+                val imageFiles =
+                    dir.listFiles { file -> file.extension == "jpg" || file.extension == "png" }
+                for (imageFile in imageFiles!!) {
+                    imageFile.delete()
+                }
+            }
             val intent = Intent(requireContext(), TakePhotoActivity::class.java)
             startActivity(intent)
         }
