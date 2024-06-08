@@ -16,6 +16,10 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.workgood.R
 import java.util.*
 
+/**
+ * Activity that allows users to set start and end times for an alarm.
+ * The activity interacts with the system's AlarmManager to schedule alarms and saves the set times in shared preferences.
+ */
 class SetAlarmActivity : AppCompatActivity() {
     companion object {
         const val END_ALARM = "com.example.workgood.END_ALARM"
@@ -28,6 +32,13 @@ class SetAlarmActivity : AppCompatActivity() {
 
     private lateinit var alarmManager: AlarmManager
 
+    /**
+     * Called when the activity is starting.
+     * It initializes the view and sets up the UI components.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down,
+     * then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle).
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_set_alarm)
@@ -68,7 +79,6 @@ class SetAlarmActivity : AppCompatActivity() {
                     if (alarmManager.canScheduleExactAlarms()) {
                         setAlarms(newStartHour, newStartMinute, newEndHour, newEndMinute)
                     } else {
-                        // Guide the user to the app settings to enable the permission
                         Toast.makeText(
                             this,
                             getString(R.string.exact_alarms_permission_message),
@@ -87,8 +97,16 @@ class SetAlarmActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Sets alarms based on the provided start and end time.
+     * Times are saved in SharedPreferences and the alarm is scheduled using AlarmManager.
+     *
+     * @param startHour The hour at which the alarm should start.
+     * @param startMinute The minute at which the alarm should start.
+     * @param endHour The hour at which the alarm should end.
+     * @param endMinute The minute at which the alarm should end.
+     */
     private fun setAlarms(startHour: Int, startMinute: Int, endHour: Int, endMinute: Int) {
-        // Save the times in SharedPreferences
         val sharedPreferences: SharedPreferences =
             getSharedPreferences(ALARM_PREFS_KEY, Context.MODE_PRIVATE)
         val editor = sharedPreferences.edit()
@@ -100,9 +118,16 @@ class SetAlarmActivity : AppCompatActivity() {
 
         setAlarm(endHour, endMinute, END_ALARM)
 
-        finish() // Close the activity after setting the alarms
+        finish()
     }
 
+    /**
+     * Sets a single alarm with the provided hour, minute and action.
+     *
+     * @param hour The hour at which the alarm should trigger.
+     * @param minute The minute at which the alarm should trigger.
+     * @param action The action that identifies the alarm's operation.
+     */
     private fun setAlarm(hour: Int, minute: Int, action: String) {
         val calendar = Calendar.getInstance().apply {
             set(Calendar.HOUR_OF_DAY, hour)
@@ -123,7 +148,6 @@ class SetAlarmActivity : AppCompatActivity() {
         try {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, alarmIntent)
         } catch (e: SecurityException) {
-            //TODO: ADD asking again for permission
             Toast.makeText(
                 this,
                 getString(R.string.permission_not_granted_message),

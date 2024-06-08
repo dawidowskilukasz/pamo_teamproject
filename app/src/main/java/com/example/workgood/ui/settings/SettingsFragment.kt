@@ -13,6 +13,10 @@ import com.example.workgood.databinding.FragmentSettingsBinding
 import com.example.workgood.ui.take_photo.TakePhotoActivity
 import java.util.Locale
 
+/**
+ * A Fragment subclass representing the settings screen of the application.
+ * It allows users to set alarm times and stop alarms or navigate to take photo screen.
+ */
 class SettingsFragment : Fragment() {
     companion object {
         const val ALARM_PREFS_KEY = "alarm_prefs"
@@ -25,10 +29,20 @@ class SettingsFragment : Fragment() {
 
     private var _binding: FragmentSettingsBinding? = null
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
 
+    /**
+     * Called to have the fragment instantiate.
+     * Initializes the settings ViewModel,sets up UI components and click listeners.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -40,20 +54,12 @@ class SettingsFragment : Fragment() {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        // this is commented out as we no longer have this binding
-        // but it is a guideline of how to use such bindings:
-//        val textView: TextView = binding.textSettings
-//        dashboardViewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
         binding.setAlarmButton.setOnClickListener {
             val intent = Intent(requireContext(), SetAlarmActivity::class.java)
             startActivity(intent)
         }
         loadSavedTimes()
 
-        // Placeholder stop button logic
-        //TODO: Workout how to implement compare logic
         binding.stopAlarmButton.setOnClickListener {
             val stopIntent = Intent(context, StartAlarmService::class.java).apply {
                 action = STOP_ALARM_ACTION
@@ -70,12 +76,19 @@ class SettingsFragment : Fragment() {
         return root
     }
 
+    /**
+     * Reloads any saved times when returning to the fragment.
+     */
     override fun onResume() {
         super.onResume()
 
         loadSavedTimes()
     }
 
+    /**
+     * Loads saved start and end times of the alarm from shared preferences
+     * and updates the corresponding UI elements.
+     */
     private fun loadSavedTimes() {
         val sharedPreferences =
             requireContext().getSharedPreferences(ALARM_PREFS_KEY, Context.MODE_PRIVATE)
@@ -99,6 +112,10 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    /**
+     * Cleans up any resources that will not be needed after the view is destroyed.
+     * It also resets the _binding variable to null.
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
