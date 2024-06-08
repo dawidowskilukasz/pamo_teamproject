@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.workgood.R
 import com.example.workgood.databinding.FragmentSettingsBinding
+import com.example.workgood.ui.take_photo.TakePhotoActivity
 import java.util.Locale
 
 class SettingsFragment : Fragment() {
@@ -50,6 +51,11 @@ class SettingsFragment : Fragment() {
             startActivity(intent)
         }
         loadSavedTimes()
+
+        binding.setMainPhoto.setOnClickListener{
+            val intent = Intent(requireContext(), TakePhotoActivity::class.java)
+            startActivity(intent)
+        }
 
         return root
     }
