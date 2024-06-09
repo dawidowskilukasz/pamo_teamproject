@@ -70,7 +70,7 @@ class TakePhotoActivity : AppCompatActivity() {
             if (!permissionGranted) {
                 Toast.makeText(
                     baseContext,
-                    getString(R.string.permission_request_denied,
+                    getString(R.string.permission_request_denied),
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
@@ -170,7 +170,6 @@ class TakePhotoActivity : AppCompatActivity() {
                         Log.d(
                             "Image Comparison",
                             getString(R.string.images_similarity, imageFiles[i].name, imageFiles[j].name, similarityText))
-                        )
                         if (areImagesSimilar) {
                             val stopIntent = Intent(this, StartAlarmService::class.java).apply {
                                 action = SettingsFragment.STOP_ALARM_ACTION
