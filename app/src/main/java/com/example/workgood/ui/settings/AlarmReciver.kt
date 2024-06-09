@@ -21,7 +21,7 @@ class AlarmReceiver : BroadcastReceiver() {
      * This method is called when the BroadcastReceiver is receiving an intent broadcast.
      * Depending on the action specified in the received intent, the receiver
      * performs the corresponding action (e.g., starting the alarm service).
-     * 
+     *
      * @param context The Context in which the receiver is running.
      * @param intent The Intent being received that contains information about the broadcast.
      */

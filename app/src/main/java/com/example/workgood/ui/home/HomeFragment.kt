@@ -34,14 +34,14 @@ class HomeFragment : Fragment() {
     private lateinit var runnable: Runnable
 
     /**
-    * Called to have the fragment instantiate.
-    * Initializes the home ViewModel, timer text and updating timer handler.
-    *
-    * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
-    * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
-    * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
-    * @return Return the View for the fragment's UI, or null.
-    */
+     * Called to have the fragment instantiate.
+     * Initializes the home ViewModel, timer text and updating timer handler.
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
