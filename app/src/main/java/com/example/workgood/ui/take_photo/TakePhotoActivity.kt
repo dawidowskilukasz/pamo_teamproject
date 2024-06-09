@@ -171,7 +171,7 @@ class TakePhotoActivity : AppCompatActivity() {
                                 action = SettingsFragment.STOP_ALARM_ACTION
                             }
                             this.stopService(stopIntent)
-                            val intent = Intent(this, HomeFragment::class.java)
+                            val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
                         } else {
                             Toast.makeText(baseContext,
