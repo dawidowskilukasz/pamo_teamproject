@@ -36,9 +36,9 @@ class FullScreenImageDialog(private val imageUri: Uri, private val onSave: () ->
 
         val builder = AlertDialog.Builder(requireContext(), R.style.FullScreenDialog)
             .setView(view)
-            .setTitle("Do you want to save this photo?")
-            .setPositiveButton("Save") { _, _ -> onSave() }
-            .setNegativeButton("Discard") { _, _ -> onDiscard() }
+            .setTitle(getString(R.string.do_you_want_to_save_this_photo))
+            .setPositiveButton(getString(R.string.save)) { _, _ -> onSave() }
+            .setNegativeButton(getString(R.string.discard)) { _, _ -> onDiscard() }
 
         return builder.create()
     }

@@ -50,8 +50,8 @@ class StartAlarmService : Service() {
             PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_IMMUTABLE)
 
         val notification: Notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Sound Playback Service")
-            .setContentText("Playing sound in background")
+            .setContentTitle(getString(R.string.sound_playback_service))
+            .setContentText(getString(R.string.playing_sound_in_background))
             .setSmallIcon(R.drawable.logo)
             .setContentIntent(pendingIntent)
             .build()

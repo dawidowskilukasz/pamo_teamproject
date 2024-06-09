@@ -13,6 +13,7 @@
     <string name="start_time_error">Start time cannot be later than end time</string>
     <string name="exact_alarms_permission_message">Please allow exact alarms in the app settings.</string>
     <string name="permission_not_granted_message">Permission to set exact alarms is not granted.</string>
+    <string name="permission_request_denied">Permission request denied</string>
     <string name="start_time_format">Start Time: %02d:%02d</string>
     <string name="end_time_format">End Time: %02d:%02d</string>
     <string name="time_format">%02d:%02d</string>
@@ -25,4 +26,21 @@
     <string name="take_photo">Take Photo</string>
     <string name="start_capture">Start Capture</string>
     <string name="stop_capture">Stop Capture</string>
+    <string name="sound_playback_service">Sound Playback Service</string>
+    <string name="playing_sound_in_background">Playing sound in background</string>
+    <string name="photo_capture_failed">Photo capture failed: %1$s</string>
+    <string name="photo_capture_succeeded">Photo capture succeeded: %1$s</string>
+    <string name="images_similarity">Images %1$s and %2$s are %3$s</string>
+    <string name="similar">similar</string>
+    <string name="not_similar">not similar</string>
+    <string name="photo_not_similar">Photo not similar!</string>
+    <string name="not_enough_images_in_the_directory">Not enough images in the directory</string>
+    <string name="directory_does_not_exist">Directory does not exist</string>
+    <string name="failed_to_load_images">Failed to load images</string>
+    <string name="photo_saved_at">Photo saved at: %1$s</string>
+    <string name="photo_discarded">Photo discarded</string>
+    <string name="use_case_binding_failed">Use case binding failed</string>
+    <string name="do_you_want_to_save_this_photo">Do you want to save this photo?</string>
+    <string name="save">Save</string>
+    <string name="discard">Discard</string>
 </resources>

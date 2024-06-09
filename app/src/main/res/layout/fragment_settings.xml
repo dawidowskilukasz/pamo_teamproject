@@ -23,9 +23,6 @@
 
     <!-- Start Time -->
 
-    <!-- End Time -->
-
-
     <TextView
         android:id="@+id/start_time_text"
         android:layout_width="wrap_content"
@@ -49,6 +46,8 @@
         app:layout_constraintHorizontal_bias="0.689"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/start_time_text" />
+
+    <!-- End Time -->
 
     <TextView
         android:id="@+id/end_time_text"

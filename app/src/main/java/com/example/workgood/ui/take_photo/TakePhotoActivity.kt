@@ -23,6 +23,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import com.example.workgood.MainActivity
+import com.example.workgood.R
 import com.example.workgood.databinding.ActivityTakePhotoBinding
 import com.example.workgood.ui.home.HomeFragment
 import com.example.workgood.ui.settings.SettingsFragment
@@ -68,12 +69,12 @@ class TakePhotoActivity : AppCompatActivity() {
                 println(entry)
             }
             permissions.entries.forEach {
-                if (it.key in REQUIRED_PERMISSIONS && it.value == false)
+                if (it.key in REQUIRED_PERMISSIONS && !it.value)
                     permissionGranted = false
             }
             if (!permissionGranted) {
                 Toast.makeText(baseContext,
-                    "Permission request denied",
+                    getString(R.string.permission_request_denied),
                     Toast.LENGTH_SHORT).show()
             } else {
                 startCamera()
@@ -134,12 +135,12 @@ class TakePhotoActivity : AppCompatActivity() {
             ContextCompat.getMainExecutor(this),
             object : ImageCapture.OnImageSavedCallback {
                 override fun onError(exc: ImageCaptureException) {
-                    Log.e(TAG, "Photo capture failed: ${exc.message}", exc)
+                    Log.e(TAG, getString(R.string.photo_capture_failed, exc.message), exc)
                 }
 
                 override fun
                         onImageSaved(output: ImageCapture.OutputFileResults){
-                    val msg = "Photo capture succeeded: ${output.savedUri}"
+                    val msg = getString(R.string.photo_capture_succeeded, output.savedUri)
                     savedImageUri = output.savedUri
                     Log.d(TAG, msg)
                     compareImagesInDirectory()
@@ -164,8 +165,9 @@ class TakePhotoActivity : AppCompatActivity() {
                         val imagePath1 = imageFiles[i].absolutePath
                         val imagePath2 = imageFiles[j].absolutePath
                         val areImagesSimilar = compareImages(imagePath1, imagePath2)
+                        val similarityText = if (areImagesSimilar) getString(R.string.similar) else getString(R.string.not_similar)
                         imageFiles[j].delete()
-                        Log.d("Image Comparison", "Images ${imageFiles[i].name} and ${imageFiles[j].name} are similar: $areImagesSimilar")
+                        Log.d("Image Comparison", getString(R.string.images_similarity, imageFiles[i].name, imageFiles[j].name, similarityText))
                         if (areImagesSimilar) {
                             val stopIntent = Intent(this, StartAlarmService::class.java).apply {
                                 action = SettingsFragment.STOP_ALARM_ACTION
@@ -175,16 +177,16 @@ class TakePhotoActivity : AppCompatActivity() {
                             startActivity(intent)
                         } else {
                             Toast.makeText(baseContext,
-                                "Photo not similar!",
+                                getString(R.string.photo_not_similar),
                                 Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
             } else {
-                Log.d("Image Comparison", "Not enough images in the directory")
+                Log.d("Image Comparison", getString(R.string.not_enough_images_in_the_directory))
             }
         } else {
-            Log.d("Image Comparison", "Directory does not exist")
+            Log.d("Image Comparison", getString(R.string.directory_does_not_exist))
         }
     }
 
@@ -199,9 +201,9 @@ class TakePhotoActivity : AppCompatActivity() {
         return try {
             val proj = arrayOf(MediaStore.Images.Media.DATA)
             cursor = contentResolver.query(uri!!, proj, null, null, null)
-            val column_index = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+            val columnIndex = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
             cursor.moveToFirst()
-            cursor.getString(column_index)
+            cursor.getString(columnIndex)
         } finally {
             cursor?.close()
         }
@@ -220,7 +222,7 @@ class TakePhotoActivity : AppCompatActivity() {
         val img2 = Imgcodecs.imread(imagePath2, Imgcodecs.IMREAD_GRAYSCALE)
 
         if (img1.empty() || img2.empty()) {
-            Log.d("OpenCV", "Failed to load images")
+            Log.d("OpenCV", getString(R.string.failed_to_load_images))
             return false
         }
 
@@ -256,11 +258,11 @@ class TakePhotoActivity : AppCompatActivity() {
         if (uri == null) return
 
         val dialog = FullScreenImageDialog(uri,
-            onSave = { Toast.makeText(this, "Photo saved at: $uri", Toast.LENGTH_SHORT).show() },
+            onSave = { Toast.makeText(this, getString(R.string.photo_saved_at, uri), Toast.LENGTH_SHORT).show() },
             onDiscard = {
                 contentResolver.delete(uri, null, null)
                 savedImageUri = null
-                Toast.makeText(this, "Photo discarded", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.photo_discarded), Toast.LENGTH_SHORT).show()
             })
 
         dialog.show(supportFragmentManager, "FullScreenImageDialog")
@@ -290,7 +292,7 @@ class TakePhotoActivity : AppCompatActivity() {
                     this, cameraSelector, preview, imageCapture)
 
             } catch(exc: Exception) {
-                Log.e(TAG, "Use case binding failed", exc)
+                Log.e(TAG, getString(R.string.use_case_binding_failed), exc)
             }
 
         }, ContextCompat.getMainExecutor(this))
