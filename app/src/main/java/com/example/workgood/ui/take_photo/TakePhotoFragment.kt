@@ -31,12 +31,12 @@ class TakePhotoFragment : Fragment() {
      * @return The newly created view for the fragment or null if the fragment does not provide a UI.
      */
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         val notificationsViewModel =
-                ViewModelProvider(this).get(TakePhotoViewModel::class.java)
+            ViewModelProvider(this).get(TakePhotoViewModel::class.java)
 
         _binding = FragmentTakePhotoBinding.inflate(inflater, container, false)
         val root: View = binding.root

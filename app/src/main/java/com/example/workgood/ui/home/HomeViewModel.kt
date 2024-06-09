@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
  * It manages the timer text that is observed by the fragment to update the UI when the timer text changes.
  */
 class HomeViewModel : ViewModel() {
-    
+
     private val _text = MutableLiveData<String>()
     val text: LiveData<String> = _text
 
