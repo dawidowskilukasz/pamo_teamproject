@@ -4,8 +4,6 @@ import android.Manifest
 import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.content.Context
-import android.database.Cursor
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -21,18 +19,11 @@ import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import androidx.core.net.toUri
 import com.example.workgood.MainActivity
 import com.example.workgood.R
 import com.example.workgood.databinding.ActivityTakePhotoBinding
-import com.example.workgood.ui.home.HomeFragment
 import com.example.workgood.ui.settings.SettingsFragment
 import com.example.workgood.ui.settings.StartAlarmService
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
-
 import org.opencv.core.Core
 import org.opencv.core.Mat
 import org.opencv.core.MatOfFloat
@@ -40,8 +31,11 @@ import org.opencv.core.MatOfInt
 import org.opencv.imgcodecs.Imgcodecs
 import org.opencv.imgproc.Imgproc
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
-typealias LumaListener = (luma: Double) -> Unit
 
 /**
  * An activity that controls the camera for photo capturing and image comparison.
@@ -62,7 +56,8 @@ class TakePhotoActivity : AppCompatActivity() {
 
     private val activityResultLauncher =
         registerForActivityResult(
-            ActivityResultContracts.RequestMultiplePermissions())
+            ActivityResultContracts.RequestMultiplePermissions()
+        )
         { permissions ->
             var permissionGranted = true
             for (entry in permissions.entries) {
@@ -73,9 +68,11 @@ class TakePhotoActivity : AppCompatActivity() {
                     permissionGranted = false
             }
             if (!permissionGranted) {
-                Toast.makeText(baseContext,
-                    getString(R.string.permission_request_denied),
-                    Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    baseContext,
+                    getString(R.string.permission_request_denied,
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
                 startCamera()
             }
@@ -119,15 +116,17 @@ class TakePhotoActivity : AppCompatActivity() {
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
-            if(Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.P) {
                 put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/WorkGoodApp")
             }
         }
 
         val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(contentResolver,
+            .Builder(
+                contentResolver,
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                contentValues)
+                contentValues
+            )
             .build()
 
         imageCapture.takePicture(
@@ -139,7 +138,7 @@ class TakePhotoActivity : AppCompatActivity() {
                 }
 
                 override fun
-                        onImageSaved(output: ImageCapture.OutputFileResults){
+                        onImageSaved(output: ImageCapture.OutputFileResults) {
                     val msg = getString(R.string.photo_capture_succeeded, output.savedUri)
                     savedImageUri = output.savedUri
                     Log.d(TAG, msg)
@@ -157,7 +156,8 @@ class TakePhotoActivity : AppCompatActivity() {
     private fun compareImagesInDirectory() {
         val dir = File(Environment.getExternalStorageDirectory(), "/Pictures/WorkGoodApp")
         if (dir.exists() && dir.isDirectory) {
-            val imageFiles = dir.listFiles { file -> file.extension == "jpg" || file.extension == "png" }
+            val imageFiles =
+                dir.listFiles { file -> file.extension == "jpg" || file.extension == "png" }
 
             if (imageFiles != null && imageFiles.size >= 2) {
                 for (i in imageFiles.indices) {
@@ -167,18 +167,23 @@ class TakePhotoActivity : AppCompatActivity() {
                         val areImagesSimilar = compareImages(imagePath1, imagePath2)
                         val similarityText = if (areImagesSimilar) getString(R.string.similar) else getString(R.string.not_similar)
                         imageFiles[j].delete()
-                        Log.d("Image Comparison", getString(R.string.images_similarity, imageFiles[i].name, imageFiles[j].name, similarityText))
+                        Log.d(
+                            "Image Comparison",
+                            getString(R.string.images_similarity, imageFiles[i].name, imageFiles[j].name, similarityText))
+                        )
                         if (areImagesSimilar) {
                             val stopIntent = Intent(this, StartAlarmService::class.java).apply {
                                 action = SettingsFragment.STOP_ALARM_ACTION
                             }
                             this.stopService(stopIntent)
-                            val intent = Intent(this, HomeFragment::class.java)
+                            val intent = Intent(this, MainActivity::class.java)
                             startActivity(intent)
                         } else {
-                            Toast.makeText(baseContext,
+                            Toast.makeText(
+                                baseContext,
                                 getString(R.string.photo_not_similar),
-                                Toast.LENGTH_SHORT).show()
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
@@ -187,25 +192,6 @@ class TakePhotoActivity : AppCompatActivity() {
             }
         } else {
             Log.d("Image Comparison", getString(R.string.directory_does_not_exist))
-        }
-    }
-
-    /**
-     * Converts the provided URI to its real file system path.
-     *
-     * @param uri The URI to convert.
-     * @return The real path as a String, or null if the conversion is not possible.
-     */
-    private fun getRealPathFromURI(uri: Uri?): String? {
-        var cursor: Cursor? = null
-        return try {
-            val proj = arrayOf(MediaStore.Images.Media.DATA)
-            cursor = contentResolver.query(uri!!, proj, null, null, null)
-            val columnIndex = cursor!!.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
-            cursor.moveToFirst()
-            cursor.getString(columnIndex)
-        } finally {
-            cursor?.close()
         }
     }
 
@@ -243,7 +229,7 @@ class TakePhotoActivity : AppCompatActivity() {
         val result = Imgproc.compareHist(hist1, hist2, Imgproc.CV_COMP_CORREL)
 
         // Define a threshold for similarity (1.0 means identical)
-        val similarityThreshold = 0.5
+        val similarityThreshold = 0.65
 
         return result >= similarityThreshold
     }
@@ -289,9 +275,10 @@ class TakePhotoActivity : AppCompatActivity() {
                 cameraProvider.unbindAll()
 
                 cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture)
+                    this, cameraSelector, preview, imageCapture
+                )
 
-            } catch(exc: Exception) {
+            } catch (exc: Exception) {
                 Log.e(TAG, getString(R.string.use_case_binding_failed), exc)
             }
 
@@ -315,7 +302,8 @@ class TakePhotoActivity : AppCompatActivity() {
      */
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
         ContextCompat.checkSelfPermission(
-            baseContext, it) == PackageManager.PERMISSION_GRANTED
+            baseContext, it
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
     /**
@@ -332,7 +320,7 @@ class TakePhotoActivity : AppCompatActivity() {
         private const val TAG = "WorkGoodApp"
         private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private val REQUIRED_PERMISSIONS =
-            mutableListOf (
+            mutableListOf(
                 Manifest.permission.CAMERA,
                 Manifest.permission.RECORD_AUDIO
             ).apply {

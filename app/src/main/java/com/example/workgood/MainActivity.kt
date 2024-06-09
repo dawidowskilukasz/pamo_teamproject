@@ -2,6 +2,7 @@ package com.example.workgood
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
@@ -11,7 +12,6 @@ import com.example.workgood.databinding.ActivityMainBinding
 import com.example.workgood.ui.take_photo.TakePhotoActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.opencv.android.OpenCVLoader
-import android.util.Log
 
 /**
  * MainActivity acts as the entry point for the application and the host for its primary navigation components.
